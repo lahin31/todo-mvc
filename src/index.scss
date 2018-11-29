@@ -1,0 +1,91 @@
+$fontFamily: Arial, Helvetica, sans-serif;
+$colors: (
+  headerColor: #d5777c,
+  btnDanger: #f44336,
+  btnSuccess: #4caf50,
+  btnPrimary: #008cba
+);
+
+@function set_color($color-name) {
+  @return map-get($colors, $color-name);
+}
+
+@mixin todos_btn($color, $marginLeft, $marginRight) {
+  background-color: $color;
+  border: none;
+  color: white;
+  padding: 5px 6px;
+  cursor: pointer;
+  margin-left: $marginLeft;
+  margin-right: $marginRight;
+}
+
+@mixin action_btns($color, $marginRight) {
+  background-color: $color;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: $marginRight;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-shadow: border-box;
+}
+
+body {
+  font-family: $fontFamily;
+  background: #f5f9fa;
+  .container {
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    h1 {
+      font-size: 5rem;
+      font-weight: 100;
+      font-style: italic;
+      color: set_color(headerColor);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+    }
+    .all_todos {
+      ul {
+        li {
+          list-style: none;
+          margin-top: 5px;
+          .checked_btn {
+            @include todos_btn(set_color(btnSuccess), 0, 10px);
+          }
+          .remove_btn {
+            @include todos_btn(set_color(btnDanger), 10px, 0);
+          }
+        }
+      }
+    }
+    .todo_actions {
+      margin-top: 20px;
+      .btns {
+        display: flex;
+        justify-content: space-around;
+        .all_btn {
+          @include action_btns(set_color(btnSuccess), 5px);
+        }
+        .active_btn {
+          @include action_btns(set_color(btnPrimary), 5px);
+        }
+        .completed_btn {
+          @include action_btns(set_color(btnDanger), 0);
+        }
+      }
+    }
+  }
+}
