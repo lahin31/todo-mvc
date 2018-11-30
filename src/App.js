@@ -2,34 +2,41 @@ import React, { useState } from "react";
 import Form from "./components/Form";
 import Todo from "./components/Todo";
 
-export default () => {
+function App() {
   const [todos, setTodos] = useState([]);
   const [totalCompleted, setTotalCompleted] = useState(0);
+
+  const checkTotalCompleted = () => {
+    let x = 0;
+    const _todos = [...todos];
+    _todos.map(tC => {
+      if (tC.completed === true) {
+        return (x += 1);
+      } else {
+        return tC;
+      }
+    });
+    setTotalCompleted(x);
+  };
 
   const addTodo = text => {
     const _todos = [...todos];
     const obj = { text: text, completed: false, showText: true };
     _todos.push(obj);
     setTodos(_todos);
-    setTotalCompleted(totalCompleted + 1);
   };
 
   const toggleComplete = i => {
-    setTodos(
-      todos.map((todo, index) =>
-        index === i
-          ? {
-              ...todo,
-              completed: !todo.completed
-            }
-          : todo
-      )
-    );
-    if (totalCompleted <= 0) {
-      setTotalCompleted(totalCompleted + 1);
-    } else {
-      setTotalCompleted(totalCompleted - 1);
-    }
+    const _todos = [...todos];
+    _todos.map((_todo, index) => {
+      if (index === i) {
+        return (_todo.completed = !_todo.completed);
+      } else {
+        return _todo;
+      }
+    });
+    setTodos(_todos);
+    checkTotalCompleted();
   };
 
   const removeTodo = text => {
@@ -39,13 +46,14 @@ export default () => {
     const _todos = [...todos];
     _todos.splice(matchingIndex, 1);
     setTodos(_todos);
-    setTotalCompleted(totalCompleted - 1);
+    checkTotalCompleted();
   };
 
   const allTodos = () => {
     const _todos = [...todos];
     _todos.map(_todo => (_todo.showText = true));
     setTodos(_todos);
+    checkTotalCompleted();
   };
 
   const activeTodos = () => {
@@ -58,6 +66,7 @@ export default () => {
       }
     });
     setTodos(_todos);
+    checkTotalCompleted();
   };
 
   const completedTodos = () => {
@@ -70,15 +79,17 @@ export default () => {
       }
     });
     setTodos(_todos);
+    checkTotalCompleted();
   };
 
   const clearCompleted = () => {
     const _todos = [...todos];
     const res = _todos.filter(_todo => {
-      return _todo.completed === false
+      return _todo.completed === false;
     });
-    setTodos(res)
-  }
+    setTodos(res);
+    checkTotalCompleted();
+  };
 
   return (
     <div className="container">
@@ -102,6 +113,7 @@ export default () => {
       <div className="todo_actions">
         {todos.length > 0 && (
           <div className="btns">
+            <p>Total {totalCompleted} todo's completed</p>
             <button className="all_btn" onClick={allTodos}>
               All
             </button>
@@ -111,10 +123,14 @@ export default () => {
             <button className="completed_btn" onClick={completedTodos}>
               Completed
             </button>
-            <button className="completed_btn" onClick={clearCompleted}>Clear Completed</button>
+            <button className="completed_btn" onClick={clearCompleted}>
+              Clear Completed
+            </button>
           </div>
         )}
       </div>
     </div>
   );
-};
+}
+
+export default App;
